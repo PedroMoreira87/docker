@@ -1,0 +1,37 @@
+version: "3"
+services:
+  demo-app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+#    env_file:
+#      - ./.env
+    depends_on:
+      - mongo
+      - redis
+    networks:
+      - backend
+
+  mongo:
+    image: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mongo
+      - MONGO_INITDB_ROOT_PASSWORD=mongo
+    volumes:
+      - demo-app-mongo-db:/data/db
+    networks:
+      - backend
+
+  redis:
+    image: redis
+    networks:
+      - backend
+
+volumes:
+  demo-app-mongo-db:
+
+networks:
+  backend:
+    driver: bridge
